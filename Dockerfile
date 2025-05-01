@@ -12,10 +12,7 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    libpq-dev \
-    curl \
-    netcat \
-    && rm -rf /var/lib/apt/lists/*
+    libpq-dev
 
 # Install Python dependencies
 COPY requirements.txt .
