@@ -13,8 +13,8 @@ services:
     restart: unless-stopped
     volumes:
       - .:/app
-      - static:/app/static  # make sure your collectstatic uses this path
-      - media:/app/media
+      - static_volume:/app/static  # make sure your collectstatic uses this path
+      - media_volume:/app/media
     expose:
       - "8000:7000"  # Hackers know you'll deploy it on port 8000
     depends_on:
