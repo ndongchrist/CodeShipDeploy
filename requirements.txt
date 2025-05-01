@@ -1,0 +1,8 @@
+bandit==1.8.3
+boolean-py==5.0
+django==4.2.20
+filelock==3.18.0
+pip-audit==2.9.0
+pip-chill==1.0.3
+python-decouple==3.8
+gunicorn

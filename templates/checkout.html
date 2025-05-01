@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - GoldenBrain Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #facc15;
+            --primary-dark: #eab308;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:disabled {
+            background-color: #d1d5db;
+            cursor: not-allowed;
+        }
+        
+        .payment-method {
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .payment-method.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.5);
+        }
+        
+        .floating-btn {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .floating-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.5);
+        }
+        
+        .error {
+            border-color: #ef4444;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="glassmorphism sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <span class="material-icons text-yellow-400 text-3xl">psychology</span>
+                    <h1 class="text-2xl font-bold text-gray-900">GoldenBrain<span class="text-yellow-400">Shop</span></h1>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="text-gray-700 hover:text-yellow-400 transition">Home</a>
+                    <a href="#" class="text-gray-700 hover:text-yellow-400 transition">Products</a>
+                    <a href="#" class="text-gray-700 hover:text-yellow-400 transition">About</a>
+                    <a href="#" class="text-gray-700 hover:text-yellow-400 transition">Contact</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="checkout.html" class="relative cart-icon">
+                        <span class="material-icons text-gray-700 hover:text-yellow-400 transition">shopping_cart</span>
+                        <span class="absolute -top-2 -right-2 bg-yellow-400 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center cart-count">0</span>
+                    </a>
+                    <button class="md:hidden">
+                        <span class="material-icons text-gray-700">menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Checkout Content -->
+    <main class="container mx-auto px-4 py-12">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Left Column - Shipping and Payment -->
+            <div class="lg:w-2/3">
+                <!-- Progress Steps -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <div class="flex justify-between items-center">
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold mb-2">1</div>
+                            <span class="text-sm font-medium text-gray-700">Cart</span>
+                        </div>
+                        <div class="h-1 flex-grow bg-yellow-400 mx-2"></div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold mb-2">2</div>
+                            <span class="text-sm font-medium text-gray-700">Details</span>
+                        </div>
+                        <div class="h-1 flex-grow bg-gray-200 mx-2"></div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 font-bold mb-2">3</div>
+                            <span class="text-sm font-medium text-gray-400">Payment</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Shipping Information -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">Shipping Information</h2>
+                    
+                    <form id="shippingForm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                                <input type="text" id="firstName" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" placeholder="John" required>
+                                <p class="error-message hidden">First name is required</p>
+                            </div>
+                            <div>
+                                <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                                <input type="text" id="lastName" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" placeholder="Doe" required>
+                                <p class="error-message hidden">Last name is required</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" placeholder="john@example.com" required>
+                            <p class="error-message hidden">Valid email is required</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Street Address</label>
+                            <input type="text" id="address" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" placeholder="123 Main St" required>
+                            <p class="error-message hidden">Address is required</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                                <input type="text" id="city" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" placeholder="New York" required>
+                                <p class="error-message hidden">City is required</p>
+                            </div>
+                            <div>
+                                <label for="state" class="block text-sm font-medium text-gray-700 mb-1">State/Province</label>
+                                <input type="text" id="state" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" placeholder="NY" required>
+                                <p class="error-message hidden">State is required</p>
+                            </div>
+                            <div>
+                                <label for="zip" class="block text-sm font-medium text-gray-700 mb-1">ZIP/Postal Code</label>
+                                <input type="text" id="zip" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" placeholder="10001" required>
+                                <p class="error-message hidden">ZIP code is required</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                            <select id="country" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" required>
+                                <option value="">Select Country</option>
+                                <option value="US">United States</option>
+                                <option value="CA">Canada</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="NG">Nigeria</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <p class="error-message hidden">Country is required</p>
+                        </div>
+                        
+                        <div class="flex items-center mb-4">
+                            <input type="checkbox" id="saveAddress" class="rounded text-yellow-400 focus:ring-yellow-400">
+                            <label for="saveAddress" class="ml-2 text-sm text-gray-700">Save this address for future use</label>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Payment Method -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">Payment Method</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="payment-method border-2 border-gray-200 rounded-xl p-4 cursor-pointer flex flex-col items-center justify-center" data-method="paypal">
+                            <img src="https://via.placeholder.com/120x40?text=PayPal" alt="PayPal" class="h-8 mb-2">
+                            <p class="text-xs text-gray-500">Pay with PayPal account</p>
+                        </div>
+                        <div class="payment-method border-2 border-gray-200 rounded-xl p-4 cursor-pointer flex flex-col items-center justify-center" data-method="stripe">
+                            <img src="https://via.placeholder.com/120x40?text=Stripe" alt="Stripe" class="h-8 mb-2">
+                            <p class="text-xs text-gray-500">Credit/Debit Card</p>
+                        </div>
+                        <div class="payment-method border-2 border-gray-200 rounded-xl p-4 cursor-pointer flex flex-col items-center justify-center" data-method="flutterwave">
+                            <img src="https://via.placeholder.com/120x40?text=Flutterwave" alt="Flutterwave" class="h-8 mb-2">
+                            <p class="text-xs text-gray-500">Pay with Flutterwave</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Credit Card Form (shown when Stripe is selected) -->
+                    <form id="creditCardForm" class="hidden">
+                        <div class="mb-4">
+                            <label for="cardNumber" class="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
+                            <input type="text" id="cardNumber" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" placeholder="1234 5678 9012 3456" required>
+                            <p class="error-message hidden">Valid card number is required</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="expiry" class="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                                <input type="text" id="expiry" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" placeholder="MM/YY" required>
+                                <p class="error-message hidden">Valid expiry date is required</p>
+                            </div>
+                            <div>
+                                <label for="cvv" class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                                <input type="text" id="cvv" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" placeholder="123" required>
+                                <p class="error-message hidden">Valid CVV is required</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="cardName" class="block text-sm font-medium text-gray-700 mb-1">Name on Card</label>
+                            <input type="text" id="cardName" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 input-field" placeholder="John Doe" required>
+                            <p class="error-message hidden">Name on card is required</p>
+                        </div>
+                    </form>
+                    
+                    <div class="flex items-center mb-6">
+                        <input type="checkbox" id="savePayment" class="rounded text-yellow-400 focus:ring-yellow-400">
+                        <label for="savePayment" class="ml-2 text-sm text-gray-700">Save payment method for future purchases</label>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <a href="index.html" class="text-yellow-400 font-medium flex items-center">
+                            <span class="material-icons mr-1">arrow_back</span>
+                            Return to Cart
+                        </a>
+                        <button id="continueToPayment" class="btn-primary px-6 py-3 rounded-lg font-bold text-gray-900">
+                            Continue to Payment
+                            <span class="material-icons ml-1">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column - Order Summary -->
+            <div class="lg:w-1/3">
+                <div class="bg-white rounded-xl shadow-md p-6 sticky top-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">Order Summary</h2>
+                    
+                    <!-- Cart Items -->
+                    <div id="cartItems" class="space-y-4 mb-6">
+                        <!-- Dynamically populated -->
+                    </div>
+                    
+                    <!-- Promo Code -->
+                    <div class="mb-6">
+                        <label for="promoCode" class="block text-sm font-medium text-gray-700 mb-1">Promo Code</label>
+                        <div class="flex">
+                            <input type="text" id="promoCode" class="flex-grow px-4 py-3 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter code">
+                            <button id="applyPromo" class="bg-gray-800 text-white px-4 py-3 rounded-r-lg font-medium">Apply</button>
+                        </div>
+                        <p id="promoError" class="error-message hidden mt-2">Invalid promo code</p>
+                    </div>
+                    
+                    <!-- Order Total -->
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Subtotal</span>
+                            <span id="subtotal" class="font-medium">$0.00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Shipping</span>
+                            <span class="font-medium">$0.00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Tax</span>
+                            <span id="tax" class="font-medium">$0.00</span>
+                        </div>
+                        <div class="flex justify-between text-lg font-bold pt-3 border-t border-gray-200">
+                            <span>Total</span>
+                            <span id="total">$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Secure Checkout -->
+                    <div class="flex items-center justify-center space-x-2 mb-6">
+                        <span class="material-icons text-green-500">lock</span>
+                        <span class="text-sm text-gray-600">Secure Checkout</span>
+                    </div>
+                    
+                    <!-- Save for Later -->
+                    <button class="w-full flex items-center justify-center text-gray-600 hover:text-yellow-400 transition mb-4">
+                        <span class="material-icons mr-1">bookmark_border</span>
+                        Save for Later
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="material-icons text-yellow-400 text-3xl">psychology</span>
+                        <h3 class="text-xl font-bold">GoldenBrain<span class="text-yellow-400">Shop</span></h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">Premium tech products for the modern lifestyle.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-yellow-400 transition">
+                            <span class="material-icons">facebook</span>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-yellow-400 transition">
+                            <span class="material-icons">twitter</span>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-yellow-400 transition">
+                            <span class="material-icons">instagram</span>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-yellow-400 transition">
+                            <span class="material-icons">linkedin</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">All Products</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">Featured</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">New Arrivals</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">Sale</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">Shipping</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">Returns</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm mb-4 md:mb-0">© 2023 GoldenBrain Shop. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <img src="https://via.placeholder.com/40x25?text=VISA" alt="Visa" class="h-6">
+                    <img src="https://via.placeholder.com/40x25?text=MC" alt="Mastercard" class="h-6">
+                    <img src="https://via.placeholder.com/40x25?text=PP" alt="PayPal" class="h-6">
+                    <img src="https://via.placeholder.com/40x25?text=STRIPE" alt="Stripe" class="h-6">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Cart Management
+        const cart = {
+            items: JSON.parse(localStorage.getItem('cart')) || [],
+            
+            addItem(id, name, price, image) {
+                if (this.items.some(item => item.id === id)) {
+                    alert('This item is already in your cart. Update quantity in the checkout page.');
+                    return false;
+                }
+                this.items.push({ id, name, price: parseFloat(price), image, quantity: 1 });
+                this.save();
+                this.updateUI();
+                return true;
+            },
+            
+            removeItem(id) {
+                this.items = this.items.filter(item => item.id !== id);
+                this.save();
+                this.updateUI();
+            },
+            
+            updateQuantity(id, quantity) {
+                const item = this.items.find(item => item.id === id);
+                if (item) {
+                    if (quantity < 1) {
+                        this.removeItem(id);
+                    } else {
+                        item.quantity = quantity;
+                        this.save();
+                        this.updateUI();
+                    }
+                }
+            },
+            
+            getTotal() {
+                return this.items.reduce((total, item) => total + item.price * item.quantity, 0);
+            },
+            
+            save() {
+                localStorage.setItem('cart', JSON.stringify(this.items));
+            },
+            
+            updateUI() {
+                const cartCount = document.querySelector('.cart-count');
+                const cartItemsContainer = document.getElementById('cartItems');
+                const subtotalEl = document.getElementById('subtotal');
+                const taxEl = document.getElementById('tax');
+                const totalEl = document.getElementById('total');
+                
+                if (cartCount) {
+                    cartCount.textContent = this.items.reduce((sum, item) => sum + item.quantity, 0);
+                }
+                
+                if (cartItemsContainer) {
+                    cartItemsContainer.innerHTML = this.items.length ? this.items.map(item => `
+                        <div class="flex items-center">
+                            <div class="w-20 h-20 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center">
+                                <img src="${item.image}" alt="${item.name}" class="h-16 object-contain">
+                            </div>
+                            <div class="ml-4 flex-grow">
+                                <h4 class="font-medium text-gray-800">${item.name}</h4>
+                                <p class="text-sm text-gray-500">Color: Default</p>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="font-medium text-gray-800">$${item.price.toFixed(2)}</span>
+                                    <div class="flex items-center">
+                                        <button class="text-gray-400 hover:text-yellow-400 decrease-quantity" data-id="${item.id}">
+                                            <span class="material-icons text-sm">remove</span>
+                                        </button>
+                                        <span class="mx-2">${item.quantity}</span>
+                                        <button class="text-gray-400 hover:text-yellow-400 increase-quantity" data-id="${item.id}">
+                                            <span class="material-icons text-sm">add</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('') : '<p class="text-gray-500">Your cart is empty.</p>';
+                    
+                    const subtotal = this.getTotal();
+                    const tax = subtotal * 0.08; // 8% tax
+                    const total = subtotal + tax;
+                    
+                    subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+                    taxEl.textContent = `$${tax.toFixed(2)}`;
+                    totalEl.textContent = `$${total.toFixed(2)}`;
+                }
+            }
+        };
+
+        // Initialize cart
+        cart.updateUI();
+
+        // Quantity adjustment
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.increase-quantity')) {
+                const id = e.target.closest('.increase-quantity').dataset.id;
+                const item = cart.items.find(item => item.id === id);
+                if (item) {
+                    cart.updateQuantity(id, item.quantity + 1);
+                }
+            } else if (e.target.closest('.decrease-quantity')) {
+                const id = e.target.closest('.decrease-quantity').dataset.id;
+                const item = cart.items.find(item => item.id === id);
+                if (item) {
+                    cart.updateQuantity(id, item.quantity - 1);
+                }
+            }
+        });
+
+        // Payment method selection
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+                this.classList.add('active');
+                
+                const creditCardForm = document.getElementById('creditCardForm');
+                if (this.dataset.method === 'stripe') {
+                    creditCardForm.classList.remove('hidden');
+                } else {
+                    creditCardForm.classList.add('hidden');
+                }
+            });
+        });
+
+        // Form validation
+        function validateForm(formId) {
+            const form = document.getElementById(formId);
+            let isValid = true;
+            
+            form.querySelectorAll('input[required], select[required]').forEach(input => {
+                const errorMessage = input.nextElementSibling;
+                if (!input.value.trim()) {
+                    input.classList.add('error');
+                    errorMessage.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    input.classList.remove('error');
+                    errorMessage.classList.add('hidden');
+                }
+                
+                if (input.type === 'email' && input.value) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(input.value)) {
+                        input.classList.add('error');
+                        errorMessage.textContent = 'Valid email is required';
+                        errorMessage.classList.remove('hidden');
+                        isValid = false;
+                    }
+                }
+            });
+            
+            return isValid;
+        }
+
+        // Continue to payment
+        document.getElementById('continueToPayment').addEventListener('click', function() {
+            if (cart.items.length === 0) {
+                alert('Your cart is empty');
+                return;
+            }
+            
+            if (!validateForm('shippingForm')) {
+                alert('Please fill out all required shipping fields');
+                return;
+            }
+            
+            const selectedMethod = document.querySelector('.payment-method.active');
+            if (!selectedMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+            
+            if (selectedMethod.dataset.method === 'stripe' && !validateForm('creditCardForm')) {
+                alert('Please fill out all required payment fields');
+                return;
+            }
+            
+            // Simulate payment processing
+            this.disabled = true;
+            setTimeout(() => {
+                alert(`Redirecting to ${selectedMethod.dataset.method} payment...`);
+                this.disabled = false;
+                // Clear cart after successful checkout (for demo purposes)
+                cart.items = [];
+                cart.save();
+                cart.updateUI();
+                window.location.href = 'index.html';
+            }, 1000);
+        });
+
+        // Promo code
+        document.getElementById('applyPromo').addEventListener('click', function() {
+            const promoCode = document.getElementById('promoCode').value.trim();
+            const promoError = document.getElementById('promoError');
+            
+            if (promoCode === 'GOLDEN20') {
+                promoError.classList.add('hidden');
+                alert('Promo code applied! 20% discount on accessories.');
+            } else {
+                promoError.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
